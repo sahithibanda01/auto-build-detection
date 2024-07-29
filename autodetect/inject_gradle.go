@@ -2,6 +2,7 @@ package autodetect
 
 import (
 	"fmt"
+	"errors"
 	"os"
 	"path/filepath"
 )
@@ -19,12 +20,12 @@ func (*gradleInjecter) InjectTool() error {
 
 	// Check if environment variables are set
 	if accountID == "" || token == "" || endpoint == "" {
-		return fmt.Errorf("please set HARNESS_ACCOUNT_ID, HARNESS_PAT, and HARNESS_CACHE_SERVICE_ENDPOINT.")
+		return errors.New("please set HARNESS_ACCOUNT_ID, HARNESS_PAT, and HARNESS_CACHE_SERVICE_ENDPOINT")
 	}
 
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		return fmt.Errorf("error getting user home directory:", err)
+		return fmt.Errorf("error getting user home directory: %w", err)
 	}
 
 	gradleDir := filepath.Join(homeDir, ".gradle")

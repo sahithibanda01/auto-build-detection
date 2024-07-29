@@ -14,7 +14,7 @@ type buildToolInfo struct {
 	injecter     Injecter
 }
 
-func DetectDirectoriesToCache() error {
+func DetectDirectoriesToCache(path string) error {
 	var buildToolInfoMapping = []buildToolInfo{
 		{
 			globToDetect: "build.gradle.kts",
@@ -29,12 +29,12 @@ func DetectDirectoriesToCache() error {
 	}
 
 	for _, supportedTool := range buildToolInfoMapping {
-		hash, dir, err := hashIfFileExist(supportedTool.globToDetect)
+		hash, dir, err := hashIfFileExist(path, supportedTool.globToDetect)
 		if err != nil {
 			return err
 		}
 		if hash == "" {
-			hash, dir, err = hashIfFileExist(filepath.Join("**", supportedTool.globToDetect))
+			hash, dir, err = hashIfFileExist(path, filepath.Join("**", supportedTool.globToDetect))
 			if err != nil {
 				return err
 			}
@@ -54,9 +54,8 @@ func DetectDirectoriesToCache() error {
 	return nil
 }
 
-func hashIfFileExist(glob string) (string, string, error) {
-	matches, _ := filepath.Glob(glob)
-
+func hashIfFileExist(path, glob string) (string, string, error) {
+	matches, _ := filepath.Glob(filepath.Join(path, glob))
 	if len(matches) == 0 {
 		return "", "", nil
 	}

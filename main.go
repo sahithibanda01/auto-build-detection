@@ -12,6 +12,6 @@ func main() {
 	flag.Parse()
 	err := autodetect.DetectDirectoriesToCache(*path)
 	if err != nil {
-		fmt.Errorf("unable to detect or inject the build configurations: ", err)
+		fmt.Printf("unable to detect or inject the build configurations: ", err)
 	}
 }

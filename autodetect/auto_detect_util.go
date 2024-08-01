@@ -17,7 +17,7 @@ type buildToolInfo struct {
 func DetectDirectoriesToCache(path string) error {
 	var buildToolInfoMapping = []buildToolInfo{
 		{
-			globToDetect: "build.gradle.kts",
+			globToDetect: "build.gradle",
 			tool:         "gradle",
 			injecter:     newGradleInjecter(),
 		},

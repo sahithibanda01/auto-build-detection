@@ -22,7 +22,7 @@ func DetectDirectoriesToCache(path string) error {
 			injecter:     newGradleInjecter(),
 		},
 		{
-			globToDetect: "WORKSPACE.bzlmod",
+			globToDetect: "WORKSPACE",
 			tool:         "bazel",
 			injecter:     newBazelInjecter(),
 		},

@@ -14,14 +14,17 @@ func newBazelInjecter() *bazelInjecter {
 
 func (*bazelInjecter) InjectTool() error {
 	homeDir, err := os.UserHomeDir()
-	endpoint := os.Getenv("HARNESS_END_POINT")
+	// endpoint := os.Getenv("HARNESS_END_POINT")
 	if err != nil {
 		return fmt.Errorf("error getting user home directory:", err)
 	}
 
 	bazelrcFile := filepath.Join(homeDir, ".bazelrc")
 
-	bazelrcContent := fmt.Sprintf("build --remote_cache=%s\n", endpoint)
+	bazelrcContent := `build --remote_cache=http://localhost:8082
+build --spawn_strategy=remote
+build --strategy=Javac=remote
+build --remote_timeout=60`
 
 	err = WriteOrAppendToFile(bazelrcFile, bazelrcContent)
 	if err != nil {

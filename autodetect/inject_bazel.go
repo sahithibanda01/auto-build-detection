@@ -21,7 +21,7 @@ func (*bazelInjecter) InjectTool() error {
 
 	bazelrcFile := filepath.Join(homeDir, ".bazelrc")
 
-	bazelrcContent := `build --remote_cache=http://localhost:8082/cache/bazel/`
+	bazelrcContent := `build --remote_cache=http://localhost:8082/cache/bazel`
 
 	err = WriteOrAppendToFile(bazelrcFile, bazelrcContent)
 	if err != nil {

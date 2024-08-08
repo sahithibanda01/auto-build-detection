@@ -56,14 +56,14 @@ gradle.settingsEvaluated { settings ->
                 enabled = false
             }
             remote(io.harness.Cache) {
-                accountId = '%s'
-                token = '%s'
+                accountId = System.getenv('HARNESS_ACCOUNT_ID')
+                token = System.getenv('HARNESS_PAT')
                 push = "true"
-                endpoint = '%s'
+                endpoint = System.getenv('HARNESS_CACHE_SERVICE_ENDPOINT')
             }
         }
 }
-`, accountID, token, endpoint)
+`)
 
 	gradleHome := os.Getenv("GRADLE_HOME")
 	if gradleHome != "" {

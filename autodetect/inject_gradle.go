@@ -29,7 +29,7 @@ func (*gradleInjecter) InjectTool() error {
 	}
 
 	gradleDir := filepath.Join(homeDir, ".gradle")
-	initGradleFile := filepath.Join(gradleDir, "init.gradle")
+	initGradleFile := filepath.Join(gradleDir, "init.d")
 	gradlePropertiesFile := filepath.Join(gradleDir, "gradle.properties")
 
 	// Ensure the ~/.gradle directory exists

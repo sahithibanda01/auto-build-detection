@@ -1,8 +1,8 @@
 package autodetect
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -29,7 +29,7 @@ func (*gradleInjecter) InjectTool() error {
 	}
 
 	gradleDir := filepath.Join(homeDir, ".gradle")
-	initGradleFile := filepath.Join(gradleDir, "init.d")
+	initGradleFile := filepath.Join(gradleDir, "init.gradle")
 	gradlePropertiesFile := filepath.Join(gradleDir, "gradle.properties")
 
 	// Ensure the ~/.gradle directory exists
@@ -65,6 +65,21 @@ gradle.settingsEvaluated { settings ->
 }
 `, accountID, token, endpoint)
 
+	gradleHome := os.Getenv("GRADLE_HOME")
+	if gradleHome != "" {
+		gradleHomeInit := filepath.Join(gradleHome, "init.d")
+		err = os.MkdirAll(gradleHomeInit, os.ModePerm)
+		initGradleHomeFile := filepath.Join(gradleHomeInit, "init.gradle")
+		err = WriteOrAppendToFile(initGradleHomeFile, initGradleContent)
+	}
+
+	gradleUserHome := os.Getenv("GRADLE_USER_HOME")
+	if gradleUserHome != "" {
+		gradleUserHomeInit := filepath.Join(gradleUserHome, "init.d")
+		err = os.MkdirAll(gradleUserHomeInit, os.ModePerm)
+		initGradleUserHomeFile := filepath.Join(gradleUserHomeInit, "init.gradle")
+		err = WriteOrAppendToFile(initGradleUserHomeFile, initGradleContent)
+	}
 	// Write or append the content to the init.gradle file
 	err = WriteOrAppendToFile(initGradleFile, initGradleContent)
 	if err != nil {

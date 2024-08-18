@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"fmt"
 )
 
 type buildToolInfo struct {
@@ -35,20 +36,16 @@ func DetectDirectoriesToCache(path string) error {
 		}
 		if hash == "" {
 			hash, dir, err = hashIfFileExist(path, filepath.Join("**", supportedTool.globToDetect))
-			if err != nil {
-				return err
-			}
 		}
 		if err != nil {
 			return err
 		}
 		if dir != "" && hash != "" {
-
-			err := supportedTool.injecter.InjectTool()
+			err = supportedTool.injecter.InjectTool()
 			if err != nil {
-				return err
+				fmt.Printf("Error while auto-injecting for %s build tool: %s\n", supportedTool.tool, err.Error())
+				continue
 			}
-
 		}
 	}
 	return nil

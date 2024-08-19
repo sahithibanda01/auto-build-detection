@@ -99,9 +99,9 @@ gradle.settingsEvaluated { settings ->
 	}
 
 	gradleDir := filepath.Join(homeDir, ".gradle")
-	gradleInitdDir := filepath.Join("init.d")
+	gradleInitdDir := filepath.Join(gradleDir, "init.d")
 	initGradleFile := filepath.Join(gradleInitdDir, "init.gradle")
-	gradlePropertiesFile := filepath.Join(gradleDir, "gradle.properties")
+	gradlePropertiesFile := filepath.Join(gradleInitdDir, "gradle.properties")
 
 	// Create the ~/.gradle/init.d directory if it does not exist
 	err = os.MkdirAll(gradleInitdDir, os.ModePerm)

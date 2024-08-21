@@ -15,14 +15,14 @@ func newGradleInjecter() *gradleInjecter {
 
 func (*gradleInjecter) InjectTool() error {
 	accountID := os.Getenv("HARNESS_ACCOUNT_ID")
-	token := os.Getenv("HARNESS_PAT")
+	token := os.Getenv("HARNESS_CACHE_SERVICE_TOKEN")
 	endpoint := os.Getenv("HARNESS_CACHE_SERVICE_ENDPOINT")
 	gradlePluginVersion := os.Getenv("HARNESS_GRADLE_PLUGIN_VERSION")
 	gradleCachePush := "true"
 
 	// Check if environment variables are set
 	if accountID == "" || token == "" || endpoint == "" {
-		return errors.New("please set HARNESS_ACCOUNT_ID, HARNESS_PAT, and HARNESS_CACHE_SERVICE_ENDPOINT")
+		return errors.New("please set HARNESS_ACCOUNT_ID,HARNESS_CACHE_SERVICE_TOKEN, and HARNESS_CACHE_SERVICE_ENDPOINT")
 	}
 
 	// Define the content to be written to gradle.properties
@@ -47,7 +47,6 @@ gradle.settingsEvaluated { settings ->
             }
             remote(io.harness.Cache) {
                 accountId = System.getenv('HARNESS_ACCOUNT_ID')
-                token = System.getenv('HARNESS_PAT')
                 push = "%s"
                 endpoint = System.getenv('HARNESS_CACHE_SERVICE_ENDPOINT')
             }

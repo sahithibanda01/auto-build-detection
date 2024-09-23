@@ -59,16 +59,16 @@ gradle.settingsEvaluated { settings ->
 	gradleHome := os.Getenv("GRADLE_HOME")
 	if gradleHome != "" {
 		// $GRADLE_HOME/init.d/init.gradle file
-		gradleHomeInit := filepath.Join(gradleHome, "init.d")
-		injectGradleFiles(gradleHomeInit, initGradleContent, gradlePropertiesContent)
+		// gradleHomeInit := filepath.Join(gradleHome, "init.d")
+		injectGradleFiles(gradleHome, initGradleContent, gradlePropertiesContent)
 	}
 
 	// For $GRADLE_USER_HOME
 	gradleUserHome := os.Getenv("GRADLE_USER_HOME")
 	if gradleUserHome != "" {
 		// $GRADLE_USER_HOME/init.d/init.gradle file
-		gradleUserHomeInit := filepath.Join(gradleUserHome, "init.d")
-		injectGradleFiles(gradleUserHomeInit, initGradleContent, gradlePropertiesContent)
+		// gradleUserHomeInit := filepath.Join(gradleUserHome, "init.d")
+		injectGradleFiles(gradleUserHome, initGradleContent, gradlePropertiesContent)
 	}
 
 	// For ~/.gradle
@@ -88,7 +88,8 @@ func injectGradleFiles(gradleDir string, initGradleContent string, gradlePropert
 		return fmt.Errorf("error creating %s directory: %w", gradleDir, err)
 	}
 	// $gradleDir/init.gradle file
-	initGradleHomeFile := filepath.Join(gradleDir, "init.gradle")
+	gradleHomeInit := filepath.Join(gradleDir, "init.d")
+	initGradleHomeFile := filepath.Join(gradleHomeInit, "init.gradle")
 	err = WriteOrAppendToFile(initGradleHomeFile, initGradleContent)
 	if err != nil {
 		return fmt.Errorf("error writing to %s file: %w", initGradleContent, err)

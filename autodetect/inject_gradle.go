@@ -15,13 +15,13 @@ func newGradleInjecter() *gradleInjecter {
 
 func (*gradleInjecter) InjectTool() error {
 	accountID := os.Getenv("HARNESS_ACCOUNT_ID")
-	token := os.Getenv("HARNESS_CACHE_SERVICE_TOKEN")
+	bearerToken := os.Getenv("HARNESS_CACHE_SERVICE_TOKEN")
 	endpoint := os.Getenv("HARNESS_CACHE_SERVICE_ENDPOINT")
 	gradlePluginVersion := os.Getenv("HARNESS_GRADLE_PLUGIN_VERSION")
 	gradleCachePush := "true"
 
 	// Check if environment variables are set
-	if accountID == "" || token == "" || endpoint == "" {
+	if accountID == "" || bearerToken == "" || endpoint == "" {
 		return errors.New("please set HARNESS_ACCOUNT_ID,HARNESS_CACHE_SERVICE_TOKEN, and HARNESS_CACHE_SERVICE_ENDPOINT")
 	}
 
@@ -78,8 +78,7 @@ gradle.settingsEvaluated { settings ->
 	}
 
 	gradleDir := filepath.Join(homeDir, ".gradle")
-	gradleInitdDir := filepath.Join(gradleDir, "init.d")
-	injectGradleFiles(gradleInitdDir, initGradleContent, gradlePropertiesContent)
+	injectGradleFiles(gradleDir, initGradleContent, gradlePropertiesContent)
 	return nil
 }
 
@@ -92,14 +91,14 @@ func injectGradleFiles(gradleDir string, initGradleContent string, gradlePropert
 	initGradleHomeFile := filepath.Join(gradleDir, "init.gradle")
 	err = WriteOrAppendToFile(initGradleHomeFile, initGradleContent)
 	if err != nil {
-        return fmt.Errorf("error writing to %s file: %w", initGradleContent, err)
-    }
+		return fmt.Errorf("error writing to %s file: %w", initGradleContent, err)
+	}
 	// gradleDir/gradle.properties file
 	gradleHomePropertiesFile := filepath.Join(gradleDir, "gradle.properties")
 	err = WriteOrAppendToFile(gradleHomePropertiesFile, gradlePropertiesContent)
 	if err != nil {
-        return fmt.Errorf("error writing to %s file: %w", gradlePropertiesContent, err)
-    }
+		return fmt.Errorf("error writing to %s file: %w", gradlePropertiesContent, err)
+	}
 
 	return nil
 }

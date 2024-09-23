@@ -18,7 +18,8 @@ func (*gradleInjecter) InjectTool() error {
 	bearerToken := os.Getenv("HARNESS_CACHE_SERVICE_TOKEN")
 	endpoint := os.Getenv("HARNESS_CACHE_SERVICE_ENDPOINT")
 	gradlePluginVersion := os.Getenv("HARNESS_GRADLE_PLUGIN_VERSION")
-	gradleCachePush := "true"
+	gradleCachePush := os.Getenv("HARNESS_CACHE_PUSH")
+	localCacheEnabled := os.Getenv("HARNESS_CACHE_LOCAL_ENABLED")
 
 	// Check if environment variables are set
 	if accountID == "" || bearerToken == "" || endpoint == "" {
@@ -43,7 +44,7 @@ gradle.settingsEvaluated { settings ->
     settings.pluginManager.apply(io.harness.HarnessBuildCache)
     settings.buildCache {
             local {
-                enabled = false
+                enabled = "%s"
             }
             remote(io.harness.Cache) {
                 accountId = System.getenv('HARNESS_ACCOUNT_ID')
@@ -52,7 +53,7 @@ gradle.settingsEvaluated { settings ->
             }
         }
 }
-`, gradlePluginVersion, gradleCachePush)
+`, gradlePluginVersion, localCacheEnabled, gradleCachePush)
 
 	// Injecting the above configs in gradle files
 	// For $GRADLE_HOME

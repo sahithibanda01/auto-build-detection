@@ -60,26 +60,33 @@ gradle.settingsEvaluated { settings ->
 	gradleHome := os.Getenv("GRADLE_HOME")
 	if gradleHome != "" {
 		// $GRADLE_HOME/init.d/init.gradle file
-		// gradleHomeInit := filepath.Join(gradleHome, "init.d")
-		injectGradleFiles(gradleHome, initGradleContent, gradlePropertiesContent)
+		err := injectGradleFiles(gradleHome, initGradleContent, gradlePropertiesContent)
+		if err != nil {
+			return errors.New("error in injectiong GRADLE_HOM directory")
+		}
 	}
 
 	// For $GRADLE_USER_HOME
 	gradleUserHome := os.Getenv("GRADLE_USER_HOME")
 	if gradleUserHome != "" {
 		// $GRADLE_USER_HOME/init.d/init.gradle file
-		// gradleUserHomeInit := filepath.Join(gradleUserHome, "init.d")
-		injectGradleFiles(gradleUserHome, initGradleContent, gradlePropertiesContent)
+		err := injectGradleFiles(gradleUserHome, initGradleContent, gradlePropertiesContent)
+		if err != nil {
+			return errors.New("error in injectiong GRADLE_USER_HOME directory")
+		}
 	}
 
 	// For ~/.gradle
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		return fmt.Errorf("error getting user home directory: %w", err)
+		return errors.New("error getting user home directory: %w")
 	}
 
 	gradleDir := filepath.Join(homeDir, ".gradle")
-	injectGradleFiles(gradleDir, initGradleContent, gradlePropertiesContent)
+	err = injectGradleFiles(gradleDir, initGradleContent, gradlePropertiesContent)
+	if err != nil {
+		return errors.New("error in injectiong $HOME directory")
+	}
 	return nil
 }
 

@@ -3,10 +3,10 @@ package autodetect
 import (
 	"crypto/md5" // #nosec
 	"encoding/hex"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
-	"fmt"
 )
 
 type buildToolInfo struct {

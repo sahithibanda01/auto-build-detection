@@ -60,32 +60,41 @@ gradle.settingsEvaluated { settings ->
 	gradleHome := os.Getenv("GRADLE_HOME")
 	if gradleHome != "" {
 		// $GRADLE_HOME/init.d/init.gradle file
-		// gradleHomeInit := filepath.Join(gradleHome, "init.d")
-		injectGradleFiles(gradleHome, initGradleContent, gradlePropertiesContent)
+		err := injectGradleFiles(gradleHome, initGradleContent, gradlePropertiesContent)
+		if err != nil {
+			return errors.New("error in injectiong GRADLE_HOM directory")
+		}
 	}
 
 	// For $GRADLE_USER_HOME
 	gradleUserHome := os.Getenv("GRADLE_USER_HOME")
 	if gradleUserHome != "" {
 		// $GRADLE_USER_HOME/init.d/init.gradle file
-		// gradleUserHomeInit := filepath.Join(gradleUserHome, "init.d")
-		injectGradleFiles(gradleUserHome, initGradleContent, gradlePropertiesContent)
+		err := injectGradleFiles(gradleUserHome, initGradleContent, gradlePropertiesContent)
+		if err != nil {
+			return errors.New("error in injectiong GRADLE_USER_HOME directory")
+		}
 	}
 
 	// For ~/.gradle
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		return fmt.Errorf("error getting user home directory: %w", err)
+		return errors.New("error getting user home directory: %w")
 	}
 
 	gradleDir := filepath.Join(homeDir, ".gradle")
-	injectGradleFiles(gradleDir, initGradleContent, gradlePropertiesContent)
+	err = injectGradleFiles(gradleDir, initGradleContent, gradlePropertiesContent)
+	if err != nil {
+		fmt.Printf("its okay its okay")
+		return errors.New(err.Error())
+	}
 	return nil
 }
 
 func injectGradleFiles(gradleDir string, initGradleContent string, gradlePropertiesContent string) error {
 	err := os.MkdirAll(gradleDir, os.ModePerm)
 	if err != nil {
+		fmt.Printf("error creating %s directory: %s\n", gradleDir, err.Error())
 		return fmt.Errorf("error creating %s directory: %w", gradleDir, err)
 	}
 	// $gradleDir/init.gradle file
@@ -93,12 +102,14 @@ func injectGradleFiles(gradleDir string, initGradleContent string, gradlePropert
 	initGradleHomeFile := filepath.Join(gradleHomeInit, "init.gradle")
 	err = WriteOrAppendToFile(initGradleHomeFile, initGradleContent)
 	if err != nil {
+		fmt.Printf("error writing %s file: %s\n", initGradleContent, err.Error())
 		return fmt.Errorf("error writing to %s file: %w", initGradleContent, err)
 	}
 	// gradleDir/gradle.properties file
 	gradleHomePropertiesFile := filepath.Join(gradleDir, "gradle.properties")
 	err = WriteOrAppendToFile(gradleHomePropertiesFile, gradlePropertiesContent)
 	if err != nil {
+		fmt.Printf("error writing %s file: %s\n", gradlePropertiesContent, err.Error())
 		return fmt.Errorf("error writing to %s file: %w", gradlePropertiesContent, err)
 	}
 

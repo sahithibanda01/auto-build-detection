@@ -33,7 +33,12 @@ func (*gradleInjecter) InjectTool() error {
 	initGradleContent := fmt.Sprintf(`
 initscript {
     repositories {
-        mavenCentral()
+		if (System.getenv('MAVEN_URL')) {
+            maven {
+                url System.getenv('MAVEN_URL')
+            }
+        } else {
+         
     }
     dependencies {
         classpath 'io.harness:gradle-cache:%s'

@@ -60,7 +60,6 @@ gradle.settingsEvaluated { settings ->
 	gradleHome := os.Getenv("GRADLE_HOME")
 	if gradleHome != "" {
 		// $GRADLE_HOME/init.d/init.gradle file
-		// gradleHomeInit := filepath.Join(gradleHome, "init.d")
 		injectGradleFiles(gradleHome, initGradleContent, gradlePropertiesContent)
 	}
 
@@ -68,7 +67,6 @@ gradle.settingsEvaluated { settings ->
 	gradleUserHome := os.Getenv("GRADLE_USER_HOME")
 	if gradleUserHome != "" {
 		// $GRADLE_USER_HOME/init.d/init.gradle file
-		// gradleUserHomeInit := filepath.Join(gradleUserHome, "init.d")
 		injectGradleFiles(gradleUserHome, initGradleContent, gradlePropertiesContent)
 	}
 

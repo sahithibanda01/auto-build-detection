@@ -38,7 +38,8 @@ initscript {
                 url System.getenv('MAVEN_URL')
             }
         } else {
-			mavenCentral()       
+			mavenCentral()
+		}       
     }
     dependencies {
         classpath 'io.harness:gradle-cache:%s'
